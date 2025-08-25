@@ -21,12 +21,13 @@ import { parseData } from "./utils/parseData";
 import Section from "./ui/Section";
 import Field from "./ui/Field";
 import { styles } from "./styles/ui";
+import PaletteEditor from "./ui/PaletteEditor";
 
 export default function GraphStudio() {
   const [template, setTemplate] = useState("bar");
   const [paletteName, setPaletteName] = useState("Professional");
   const [palette, setPalette] = useState(PALETTES.Professional);
-  const [customPalette, setCustomPalette] = useState(false); // lock palette when user supplies a custom array
+  const [customPalette, setCustomPalette] = useState(false);
 
   const [showGrid, setShowGrid] = useState(true);
   const [xLabel, setXLabel] = useState("Categories");
@@ -241,7 +242,7 @@ export default function GraphStudio() {
               <select
                 value={template}
                 onChange={(e) => {
-                  setCustomPalette(false); // revert to named palettes when switching templates
+                  setCustomPalette(false);
                   setTemplate(e.target.value);
                 }}
                 style={styles.input}
@@ -253,42 +254,14 @@ export default function GraphStudio() {
             </Field>
 
             <Field label="Color palette">
-              <select
-                value={paletteName}
-                onChange={(e) => {
-                  setCustomPalette(false);
-                  setPaletteName(e.target.value);
-                }}
-                style={styles.input}
-              >
-                {Object.keys(PALETTES).map((k) => (
-                  <option key={k} value={k}>
-                    {k}
-                  </option>
-                ))}
-              </select>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                  marginTop: 8,
-                  flexWrap: "wrap",
-                }}
-              >
-                {palette.map((c, i) => (
-                  <div
-                    key={i}
-                    title={c}
-                    style={{
-                      height: 18,
-                      width: 18,
-                      borderRadius: 6,
-                      border: "1px solid rgba(255,255,255,0.15)",
-                      background: c,
-                    }}
-                  />
-                ))}
-              </div>
+              <PaletteEditor
+                paletteName={paletteName}
+                palette={palette}
+                customPalette={customPalette}
+                onChangePaletteName={setPaletteName}
+                onChangePalette={setPalette}
+                onChangeCustomPalette={setCustomPalette}
+              />
             </Field>
 
             <Field label="Animation preset">
